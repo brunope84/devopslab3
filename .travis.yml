@@ -32,3 +32,10 @@ deploy:
   app: devopslab-bruno
   on:
       branch: main    
+
+# Slack
+
+notifications:
+  slack: devops-tools-grupo:NwyGpDBijWZEXkQmvlUFfsKF
+  on_success: always
+  on_failure: always
