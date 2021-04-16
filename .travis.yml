@@ -35,7 +35,7 @@ deploy:
 
 # Slack
 
-notifications:
-  slack: devops-tools-grupo:NwyGpDBijWZEXkQmvlUFfsKF
-  on_success: always
-  on_failure: always
+#notifications:
+#  slack: COLOCAR TOKEN
+#  on_success: always
+#  on_failure: always
