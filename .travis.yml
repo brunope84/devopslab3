@@ -20,11 +20,9 @@ jobs:
           - coverage run test.py || travis_terminate 1
           - coverage report app.py || travis_terminate 1;
           - coverage xml app.py || travis_terminate 1;
+        - script:
           - sonar-scanner || travis_terminate 1;  
-
-    - script:
-        - sonar-scanner || travis_terminate 1;
-      name: "Testes de Qualidade e Seguranca"
+     name: "Testes de Qualidade e Seguranca"
  addons:
    sonarcloud:
      organization: brunope84
