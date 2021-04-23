@@ -1,77 +1,68 @@
 # Linguagem Utilizada para Desenvolver a Aplicação                                                                                                                                                       
 language: python                                                                                                                                                                                         
-os: linux
-dist: xenial
-
 
 # Versão que a aplicação suporta.                                                                                                                                                                        
 python:                                                                                                                                                                                                  
   - "3.7.9"                                                                                                                                                                                              
 
+os: linux
+dist: xenial
+
 jobs:
   include:
-      - stage: Testes
-        name: "Testes Unitarios"
-        # Instalação de Módulos que são necessários para a Aplicação.                                                                                                                                            
-        install:                                                                                                                                                                                                 
-          - pip install flask flask-wtf coverage                                                                                                                                                                                  
-        script: # Defini o script de Teste que deve rodar toda vez que o código for alterado.                                                                                                                                                                                                  
-          - coverage run test.py || travis_terminate 1
-          - coverage report app.py || travis_terminate 1;
-          - coverage xml app.py || travis_terminate 1;
-        workspaces:
-          create:
-            name: coverage
-            paths:
-              - coverage.xml
-          
-      - stage: Testes
-        name: "Testes de Qualidade e Seguranca"
-        script:
-          - sonar-scanner || travis_terminate 1;  
-        workspaces:
-          use: coverage
-        addons: 
-         sonarcloud:
+    - stage: Build
+
+      name: "Testes Unitarios"
+      # Instalação de Módulos que são necessários para a Aplicação.
+      install:
+        - pip install flask flask-wtf coverage
+      script:  # Defini o script de Teste que deve rodar toda vez que o código for alterado.
+        - coverage run test.py || travis_terminate 1;
+        - coverage report app.py || travis_terminate 1;
+        - coverage xml app.py || travis_terminate 1;
+
+    - script:
+        - sonar-scanner || travis_terminate 1;
+      name: "Testes de Qualidade e Seguranca"
+      addons:
+        sonarcloud:
           organization: brunope84
           token: ${SONAR_TOKEN}
 
-      - stage: STG Deploy
-        script: skip
-        # Definir o Deploy no Heroku 
-        deploy:
-          provider: heroku
-          strategy: api
-          api_key: $HEROKU_API_KEY
-          edge: true 
-          app: devopslab-bruno-stg
-          on:
-            branch: main    
+    - stage: STG Deploy
+      script: skip
+      # Definir o Deploy no Heroku
+      deploy:
+        provider: heroku
+        strategy: api
+        api_key: $HEROKU_API_KEY
+        edge: true
+        app: devopslab-bruno-stg
+        on:
+          branch: main
 
-      - stage: STG TEST
-        script:
-          - curl https://devopslab-bruno-stg.herokuapp.com/ | grep Pipeline || travis_terminate 1;
+    - stage: STG TEST
+      script:
+        - curl https://devopslab-bruno-stg.herokuapp.com/ | grep Pipeline || travis_terminate 1;
 
-      - stage: PROD Deploy
-        script: skip
-        # Definir o Deploy no Heroku 
-        deploy:
-          provider: heroku
-          strategy: api
-          api_key: $HEROKU_API_KEY
-          edge: true 
-          app: devopslab-bruno
-          on:
-            branch: main    
+    - stage: PROD Deploy
+      script: skip
+      # Definir o Deploy no Heroku
+      deploy:
+        provider: heroku
+        strategy: api
+        api_key: $HEROKU_API_KEY
+        edge: true
+        app: devopslab-bruno
+        on:
+          branch: main
 
-       - stage: STG PROD
-         script:
-           - curl https://devopslab-bruno.herokuapp.com/ | grep Pipeline || travis_terminate 1;
-
+    - stage: STG PROD
+      script:
+        - curl https://devopslab-bruno.herokuapp.com/ | grep Pipeline || travis_terminate 1;
 
 # Slack
-
 #notifications:
-#  slack: COLOCAR TOKEN
+#  slack: COLOCAR TOKEN 
 #  on_success: always
 #  on_failure: always
