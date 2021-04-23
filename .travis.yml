@@ -36,18 +36,38 @@ jobs:
           organization: brunope84
           token: ${SONAR_TOKEN}
 
-      - stage: Deploy
+      - stage: STG Deploy
         script: skip
-     
-# Definir o Deploy no Heroku 
-#        deploy:
-#        provider: heroku
-#        strategy: api
-#        api_key: $HEROKU_API_KEY
-#        edge: true 
-#        app: devopslab-bruno
-#        on:
-#         branch: main    
+        # Definir o Deploy no Heroku 
+        deploy:
+          provider: heroku
+          strategy: api
+          api_key: $HEROKU_API_KEY
+          edge: true 
+          app: devopslab-bruno-stg
+          on:
+            branch: main    
+
+      - stage: STG TEST
+        script:
+          - curl https://devopslab-bruno-stg.herokuapp.com/ | grep Pipeline || travis_terminate 1;
+
+      - stage: PROD Deploy
+        script: skip
+        # Definir o Deploy no Heroku 
+        deploy:
+          provider: heroku
+          strategy: api
+          api_key: $HEROKU_API_KEY
+          edge: true 
+          app: devopslab-bruno
+          on:
+            branch: main    
+
+       - stage: STG PROD
+         script:
+           - curl https://devopslab-bruno.herokuapp.com/ | grep Pipeline || travis_terminate 1;
+
 
 # Slack
 
