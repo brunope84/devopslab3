@@ -11,7 +11,6 @@ python:
 jobs:
   include:
       - stage: Testes
-      
         name: "Testes Unitarios"
         # Instalação de Módulos que são necessários para a Aplicação.                                                                                                                                            
         install:                                                                                                                                                                                                 
@@ -32,8 +31,6 @@ jobs:
           - sonar-scanner || travis_terminate 1;  
         workspaces:
           use: coverage
-
-
         addons: 
          sonarcloud:
           organization: brunope84
@@ -42,15 +39,15 @@ jobs:
       - stage: Deploy
         script: skip
      
-# Definir o Deploy no Heroku
-        deploy:
-        provider: heroku
-        strategy: api
-        api_key: $HEROKU_API_KEY
-        edge: true 
-        app: devopslab-bruno
-        on:
-         branch: main    
+# Definir o Deploy no Heroku 
+#        deploy:
+#        provider: heroku
+#        strategy: api
+#        api_key: $HEROKU_API_KEY
+#        edge: true 
+#        app: devopslab-bruno
+#        on:
+#         branch: main    
 
 # Slack
 
